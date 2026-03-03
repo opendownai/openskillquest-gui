@@ -6,6 +6,9 @@ on:
       - 'v*'
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     strategy:
@@ -48,6 +51,7 @@ jobs:
         run: npm run tauri build -- --target ${{ matrix.target }}
 
       - name: Create GitHub Release
+        if: matrix.platform == 'macos-latest'
         uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -57,5 +61,3 @@ jobs:
           releaseDraft: false
           prerelease: false
           includeUpdaterJson: true
-          uploadReleaseAssets: true
-
